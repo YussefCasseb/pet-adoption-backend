@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+Header('Access-Control-Allow-Origin: *'); //for allow any domain, insecure
+Header('Access-Control-Allow-Headers: *'); //for allow any headers, insecure
+Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE'); //method allowed
+
 class Adocao extends CI_Controller {
 	function __construct() {
 		parent::__construct();
@@ -8,16 +12,20 @@ class Adocao extends CI_Controller {
 	}
 
 	public function solicitar() {
-		if (!empty($_POST)) {
-			echo json_encode($this->AdocaoModel->solicitar($_POST));
+		$post_data = json_decode(file_get_contents('php://input'), true);
+		
+		if (!empty($post_data)) {
+			echo json_encode($this->AdocaoModel->solicitar($post_data));
 		} else {
 			echo "Ocorreu um erro";	
 		}
 	}
 
 	public function registrar() {
-		if (!empty($_POST)) {
-			echo json_encode($this->AdocaoModel->registrar($_POST));
+		$post_data = json_decode(file_get_contents('php://input'), true);
+		
+		if (!empty($post_data)) {
+			echo json_encode($this->AdocaoModel->registrar($post_data));
 		} else {
 			echo "Ocorreu um erro";	
 		}

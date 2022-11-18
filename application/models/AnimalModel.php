@@ -7,11 +7,23 @@ class AnimalModel extends CI_Model {
 	}
 
 	function listar() {
+		$animaisResponse = array();
+		
 		$this->db->select('id, nome, genero, descricao, cidade, (select img_url from tbl_animais_imagens where animal_id = tbl_animais.id limit 1) as imagem');
 		$animais = $this->db->get('tbl_animais');
 
 		if (count($animais->result_array()) >= 1) {
-			return $animais->result_array();
+			foreach ($animais->result() as $animal) {
+				$animalInfo = array(
+					"image" => $animal->imagem,
+					"name" => $animal->nome,
+					"route" => '/pages/pet-profile/' . $animal->id,
+					"location" => $animal->cidade,
+				);
+				array_push($animaisResponse, $animalInfo);
+			}
+			
+			return $animaisResponse;
 		}
 
 		return array();
@@ -35,7 +47,10 @@ class AnimalModel extends CI_Model {
 			$animalInfo = array(
 				"id" => $animal->id,
 				"nome" => $animal->nome,
+				"idade" => $animal->idade,
 				"genero" => $animal->genero,
+				"tipo" => $animal->tipo,
+				"porte" => $animal->porte,
 				"descricao" => $animal->descricao,
 				"cidade" => $animal->cidade,
 				"imagens" => $imagens,
